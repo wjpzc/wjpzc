@@ -3,7 +3,7 @@ server:
     uri-encoding: UTF-8
 
 
-
+my:
   weixin:
     appid: wx346ce30e506629c1
     secret: aaf1512405d9c7c24030b610a1661689
