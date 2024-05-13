@@ -1,0 +1,123 @@
+server:
+  port: 8080
+
+spring:
+  # DataSource Config
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://8.130.161.45:3306/xypt?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Shanghai
+    username: xypt
+    password: cHnd8zswCZ2iHtnm
+    type: com.alibaba.druid.pool.DruidDataSource
+    #配置连接池的相关的信息
+    druid:
+      # 初始化大小
+      initial-size: 2
+      # 最小连接数
+      min-idle: 2
+      # 最大连接数
+      max-active: 8
+      # 获取连接时的最大等待时间
+      max-wait: 60000
+      # 一个连接在池中最小生存的时间，单位是毫秒
+      min-evictable-idle-time-millis: 300000
+      # 多久才进行一次检测需要关闭的空闲连接，单位是毫秒
+      time-between-eviction-runs-millis: 60000
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /xypt/druid/*
+        reset-enable: true
+        login-username: admin
+        login-password: 123456
+        allow:
+        deny:
+
+      web-stat-filter:
+        enabled: true
+        exclusions: /druid/*,*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico
+        session-stat-enable: true
+        session-stat-max-count: 1000
+        url-pattern: /*
+      filter:
+        # 开启慢 SQL 监控
+        stat:
+          enabled: true
+          db-type: mysql
+          log-slow-sql: true
+          slow-sql-millis: 1500
+
+  # 文件存储配置
+  file-storage:
+    local:
+      - platform: local-1 # 存储平台标识
+        enable-storage: true  #启用存储
+        enable-access: true #启用访问（线上请使用 Nginx 配置，效率更高）
+        domain: "" # 访问域名，例如：“http://127.0.0.1:8030/test/file/”，注意后面要和 path-patterns 保持一致，“/”结尾，本地存储建议使用相对路径，方便后期更换域名
+        base-path: D:/Temp/xypt/upload/ # windows测试存储地址
+#        base-path: /root/xypt/upload/ # Linux测试存储地址
+        path-patterns: /file/** # 访问路径，开启 enable-access 后，通过此路径可以访问到上传的文件
+
+  mvc:
+    dispatch-options-request: true
+    pathmatch:
+      # Springfox使用的路径匹配是基于AntPathMatcher的，而Spring Boot 2.6.X使用的是PathPatternMatcher
+      # 所以需要配置此参数
+      matching-strategy: ANT_PATH_MATCHER
+
+  servlet:
+    multipart:
+      max-file-size: 50MB  # 单个文件的大小为10M
+      max-request-size: 50MB # 总上传的数据大小为50M
+
+
+mybatis-plus:
+  global-config:
+    db-config:
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # 开启一级缓存
+    local-cache-scope: SESSION
+    cache-enabled: true
+
+# 在线接口文档配置
+knife4j:
+  # 开启增强配置
+  enable: true
+  setting:
+      enable-version: true
+
+############## Sa-Token 配置 (文档: https://sa-token.cc) ##############
+sa-token:
+  # token名称 (同时也是cookie名称)
+  token-name: xypt-token
+  # token有效期，单位s 默认30天, -1代表永不过期
+  timeout: 2592000
+  # token临时有效期 (指定时间内无操作就视为token过期) 单位: 秒
+  activity-timeout: -1
+  # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
+  is-concurrent: true
+  # 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
+  is-share: true
+  # 是否输出操作日志
+  is-log: true
+  # jwt秘钥
+  jwt-secret-key: xypt!Codj==-
+
+
+logging:
+  charset:
+    file: UTF-8 # 日志文件的字符集
+  file:
+    name: ./logs/xypt.log
+
+  logback:
+    rollingpolicy:
+      file-name-pattern: './logs/xypt.%d{yyyy-MM-dd}-%i.log.gz' #滚动日志文件名，此处进行了GZ压缩
+      max-file-size: 5MB #单个日志文件的最大大小
+      max-history: 30 #最多保留多少天日志
+      total-size-cap: 1GB #所有备份日志允许占用的最大空间

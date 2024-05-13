@@ -1,0 +1,42 @@
+server:
+  tomcat:
+    uri-encoding: UTF-8
+
+
+
+  weixin:
+    appid: wx346ce30e506629c1
+    secret: aaf1512405d9c7c24030b610a1661689
+  jwt:
+    expire: 60 # 单位分钟
+    secret: 12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890     # 密钥
+  minio:
+    endpoint: 127.0.0.1     # ip地址
+    port: 9000              # 端口号
+    accessKey: minioadmin   # 账号
+    secretKey: minioadmin   # 密码
+    secure: false           # true代表用的是https，false则用的是http，默认值是true
+    bucketName: "xypt"      # 桶的名字
+    expiry: 168               # 文件url访问有效期，单位小时
+
+
+spring:
+  data:
+    redis:
+      port: 6379
+      host: localhost
+  application:
+    name: xypt-back
+  profiles:
+     active: dev
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  main:
+    # 允许循环依赖
+    allow-circular-references: true
+#  http:
+#    encoding:
+#      force: true
+#      charset: UTF-8
+#      enable: true
